@@ -105,7 +105,8 @@ class TrainingSection:
             self.history['val-loss'].append(total_val_loss / len(self.val_data))
             self.history['val-ppl'].append(total_val_ppl / len(self.val_data))
 
-            print('\nPREDICT: {}'.format(self.predict(prefix, num_preds, token_param)))
+            print('\nPREDICT: epoch {}/{}'.format(epoch + 1, epochs))
+            print(self.predict(prefix, num_preds, token_param))
 
             plt.plot(self.history['train-loss'], label='train-loss')
             plt.plot(self.history['val-loss'], label='val-loss')

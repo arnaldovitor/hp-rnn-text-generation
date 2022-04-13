@@ -2,14 +2,15 @@ from TextProcesser import TextProcesser
 from DataGen import DataGen
 from TrainingSection import TrainingSection
 from GRU import GRUModel
+from RNN import RNNModel
 
 import tensorflow as tf
 
-num_words = 2048
+num_words = 1024
 batch_size = 16
-num_steps = 16
-num_hiddens = 1024
-vocab_size = 2048
+num_steps = 8
+num_hiddens = 2048
+vocab_size = 1024
 num_epochs = 1000
 lr = 1e-2
 
@@ -33,17 +34,17 @@ val_data = DataGen(batch_size=batch_size,
                    num_steps=num_steps,
                    num_words=num_words)
 
-GRUModel = GRUModel(vocab_size=vocab_size,
+RNNModel = RNNModel(vocab_size=vocab_size,
                     embedding_dim=vocab_size,
                     rnn_units=num_hiddens)
 
-ts = TrainingSection(net=GRUModel,
+ts = TrainingSection(net=RNNModel,
                      train_data=train_data,
                      val_data=val_data,
                      vocab=vocab)
 
 ts.run(loss=tf.keras.losses.CategoricalCrossentropy(from_logits=True),
-       updater=tf.keras.optimizers.SGD(lr),
+       updater=tf.keras.optimizers.SGD(lr, momentum=0.8),
        epochs=num_epochs,
        prefix='wizard is',
        num_preds=8,
