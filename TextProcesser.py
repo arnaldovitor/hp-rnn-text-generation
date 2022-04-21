@@ -22,6 +22,8 @@ class TextProcesser:
 
                 for p in string.punctuation:
                     book = book.replace(p, '')
+                for p in ['”', '—', '“', 'jk', 'rowling']:
+                    book = book.replace(p, '')
 
                 text += book.split(' ')
 

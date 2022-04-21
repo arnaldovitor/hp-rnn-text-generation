@@ -2,21 +2,23 @@ from TextProcesser import TextProcesser
 from DataGen import DataGen
 from TrainingSection import TrainingSection
 from GRU import GRUModel
+from ERNN import ERNNModel
 from RNN import RNNModel
+from DRNN import DRNNModel
+from LSTM import LSTMModel
 
 import tensorflow as tf
 
-num_words = 1024
-batch_size = 16
-num_steps = 8
-num_hiddens = 2048
-vocab_size = 1024
-num_epochs = 1000
-lr = 1e-2
+num_words = vocab_size = 512
+batch_size = 32
+num_steps = 16
+num_hiddens = 1024
+num_epochs = 100
+lr = 1e-4
 
 # Process text object.
 tp = TextProcesser()
-train, val, test = tp.run(books_list=[1, 2, 3, 4, 5, 6, 7],
+train, val, test = tp.run(books_list=[4],
                           ratio=[0.7, 0.1, 0.2])
 
 # Train iterator.
@@ -34,18 +36,17 @@ val_data = DataGen(batch_size=batch_size,
                    num_steps=num_steps,
                    num_words=num_words)
 
-RNNModel = RNNModel(vocab_size=vocab_size,
-                    embedding_dim=vocab_size,
+ERNNModel = ERNNModel(vocab_size=vocab_size,
                     rnn_units=num_hiddens)
 
-ts = TrainingSection(net=RNNModel,
+ts = TrainingSection(net=ERNNModel,
                      train_data=train_data,
                      val_data=val_data,
                      vocab=vocab)
 
 ts.run(loss=tf.keras.losses.CategoricalCrossentropy(from_logits=True),
-       updater=tf.keras.optimizers.SGD(lr, momentum=0.8),
+       updater=tf.keras.optimizers.Adam(lr),
        epochs=num_epochs,
-       prefix='wizard is',
+       prefix='harry is',
        num_preds=8,
        token_param=tokenizer)

@@ -38,6 +38,7 @@ class TrainingSection:
     def __train_step(self, x, y):
         with tf.GradientTape(persistent=True) as g:
             y_hat = self.net(x)
+            # y = self.net.embedding(y)
             y = tf.one_hot(y, self.net.vocab_size)
             y = tf.cast(y, tf.float32)
             l = self.loss(y, y_hat)
@@ -49,6 +50,7 @@ class TrainingSection:
 
     def __val_step(self, x, y):
         y_hat = self.net(x)
+        # y = self.net.embedding(y)
         y = tf.one_hot(y, self.net.vocab_size)
         y = tf.cast(y, tf.float32)
         l = self.loss(y, y_hat)
